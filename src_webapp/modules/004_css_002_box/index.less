@@ -1,0 +1,92 @@
+* {
+  padding: 0;
+  margin: 0;
+  white-space: nowrap;
+  transition: all 0.3s ease-in;
+}
+
+html,
+body {
+  width: 100%;
+  height: 500%;
+  font-family: 'Microsoft Yahei';
+}
+
+.app {
+  width: 100%;
+  height: 100%;
+  background-color: #333;
+  >.box_f {
+    // 
+    overflow: auto;
+    >.box {
+      width: 100px;
+      height: 100px;
+      background-color: #fff;
+      margin-bottom: 20px;
+    }
+  }
+  >.box_1_f {
+    overflow: hidden;
+    >.box_1 {
+      margin-top: 20px;
+      width: 100px;
+      height: 100px;
+      background-color: #100;
+      margin-bottom: 20px;
+    }
+  }
+  >.box_2 {
+    margin-top: 20px;
+    width: 100%;
+    background-color: #444;
+    margin-bottom: 20px;
+    overflow: hidden;
+    >.son {
+      margin-top: 10px;
+      width: 200px;
+      height: 200px;
+      float: left;
+      background-color: #fff;
+    }
+  }
+  >.box_3_f {
+    overflow: hidden;
+    >.box_3 {
+      margin-top: 20px;
+      float: left;
+      width: 100px;
+      height: 100px;
+      background-color: #fff;
+      margin-bottom: 20px;
+    }
+  }
+
+
+  >.box_4{
+    width: 100%;
+    background-color: #777;
+    >.left{
+      float: left;
+      width: 100px;
+      height: 100px;
+      background-color: red;
+    }
+    >.right{
+      height: 200px;
+      background-color: #fff;
+      overflow: hidden;
+    }
+  }
+
+
+  >.box_5{
+    background-color: #888;
+    overflow: hidden;
+    >.text{
+      margin-top: 20px;
+      float: left;
+      font-size: 30px;
+    }
+  }
+}
