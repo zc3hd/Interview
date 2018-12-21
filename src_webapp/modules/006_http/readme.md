@@ -1,91 +1,75 @@
-# 事件类
+# http
 
-### DOM事件的级别
+### 主要特点
 
-* DOM标准的定义标准
-```
-DOM0 dom.onclick = function(){}
-DOM1 这个标准没有设计和事件相关的东西
+* 无连接：请求完成就要断开
+* 无状态：下次再次请求，服务端不知道该次连接是不是当前用户。
 
-DOM2 dom.addEventListener('click',function(){},true)  
-【true,是在捕获阶段执行，false是在冒泡阶段执行】
-
-DOM3 dom.addEventListener('keyup',function(){},true)  丰富了事件类型
-```
-
-### DOM事件模型
-
-* 捕获：从上到下
-* 冒泡：从下到上
-
-### DOM事件流
-
-* 捕获-->目标阶段-->冒泡
-
-### DOM事件流的具体流程
+### 报文
 
 ```
-捕获
-window
--->document
--->html
--->body
--->dom
+【请求报文】
+请求行：GET / /HTTP/1.1 请求方式 请求路径 协议版本
+请求头: 一堆key val
+空行
+请求体:数据部分
 
-window.addEventListener("click", function() {
-  console.log("window")
-}, true);
-
-document.addEventListener("click", function() {
-  console.log("document")
-}, true);
-
-document.documentElement.addEventListener("click", function() {
-  console.log("HTML")
-}, true);
-
-document.body.addEventListener("click", function() {
-  console.log("body")
-}, true);
-
-document.getElementById("box").addEventListener("click", function() {
-  console.log("box")
-}, true);
+【响应报文】
+状态行 HTTP/1.1 200 ok 协议版本 状态码 状态信息
+响应头 一堆key val，里面有mime类型，告诉浏览器如何解析该资源
+空行
+响应体 就是我们请求的数据
 ```
 
-
-
-### event对象的常见应用
+### 方法
 
 ```
-阻止默认行为，例如a的转跳；右键点击
-ev.preventDefault() 
-
-阻止冒泡的行为
-ev.stopPropagation() 
-
-一个DOM不小被多次绑定事件，只执行写这行代码，不执行其他函数
-ev.stopImmediatePropagation()
-
-事件委托中，事件绑定的DOM
-ev.currentTarget
-
-事件的交互对象，委托的对象。点击的对象。
-ev.target
+GET -----> 获取资源
+POST -----> 传输资源
+PUT -----> 更新资源
+DELETE -----> 删除资源
+HEAD -------> 获取报文首部
 ```
 
-### 自定义事件
+### post&get
 
-* 真心搞不懂这个有什么用。
 ```
-var ev = document.getElementById("box");
-var eve = new Event("cc");
-ev.addEventListener('cc',function(){
-    ...
-});
-
-//执行
-ev.dispatchEvent(eve);
-
-CustomEvent事件对象，后面可以接一个参数。
+1.get在浏览器回退是无害的，post则再次提交数据
+2.GET的URL地址可被收藏，post no
+3.GET请求的资源会被缓存，POST no
+4.GET只能进行URL编码，post 多种
+5.GET的参数是长度限制2k,POST no
+6.GET在URL上传参，POST在请求报文的请求体上。
 ```
+
+### 状态码
+
+```
+1xx:请求已接收，继续操作
+
+2xx:成功
+200：请求成功
+206：带有Range头GET请求，带有范围的请求。
+
+3xx:重定向：重新指向到一个新的URL
+304：客服端发现有缓存文件，发出请求，服务端告诉客户端，该缓存还可以使用。
+
+4xx:服务端错误，语法错误或无法获取到
+400：客户端请求有语法错误，不能服务端理解
+403：被禁止访问
+404：no find
+
+5xx:服务器报错
+```
+
+### 持久链接
+
+* HTTP无连接，请求完成就会断开。只是普通模式
+* 1.1版本：使用keep-alive持久连接，请求完成后继续请求，不会再次建立连接
+
+### 管线化
+
+* 持久连接,请求后不会断开：请求1-->响应1-->请求2-->响应2，但不是说我请求1就回来1。而是 我这(请求123)打包请求，(响应123)打包回来。
+* 协议：1.1
+* 浏览器默认是不开启的
+* 要求对服务端对管线化的请求不失败即可。
