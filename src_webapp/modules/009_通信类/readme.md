@@ -53,8 +53,8 @@ content = content.slice(0, content.length - 1);
 xhr.send(content);
 
 // 响应：
-
-xhr.onload = function() { // xhr.onreadystatechange
+// xhr.onreadystatechange
+xhr.onload = function() { 
   // xhr.status == 200||xhr.status == 304||xhr.status == 206
   if (xhr.readyState == 4 && xhr.status == 200) {
     JSON.parse(xhr.responseText)
@@ -133,7 +133,7 @@ window.addEventListener("message",function(ev){
 },false);
 ```
 
-* WebSocket: 原生WebSocket API使用起来不太方便，我们使用Socket.io，它很好地封装了webSocket接口，提供了更简单、灵活的接口，也对不支持webSocket的浏览器提供了向下兼容。
+* WebSocket: 我们使用Socket.io，它很好地封装了webSocket接口，提供了更简单、灵活的接口，也对不支持webSocket的浏览器提供了向下兼容。
 
 * CORS:通信标准。可理解为支持跨域通信的AJAX。浏览器在识别发送一个跨域请求时，会在头部加一个orgin，支持跨域通信。
 

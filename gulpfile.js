@@ -1,5 +1,5 @@
 'use strict';
-var one = './src_webapp/modules/008_Obj/';
+var one = './src_webapp/modules/015_error/';
 
 
 
@@ -254,11 +254,11 @@ gulp.task('js', function() {
     // }))
 
     // 转语法
-    // .pipe(babel({
-    //   presets: [
-    //     'es2015',
-    //   ]
-    // }))
+    .pipe(babel({
+      presets: [
+        'es2015',
+      ]
+    }))
     // 去除严格，这个不管用
     // .pipe(removeUseStrict())
     // 压缩
