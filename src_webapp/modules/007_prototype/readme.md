@@ -13,7 +13,7 @@ function M() {
 }
 var o3 = new M();
 
-【对象进行原型对象的挂载】
+【将传入的对象进行原型对象的挂载】
 var o4 = Object.create({ name: "o4" });
 ```
 
@@ -36,7 +36,7 @@ var o4 = Object.create({ name: "o4" });
 3.构造函数执行后会返回一个对象或者没有。如果有，那么这个对象就代替我们一开始的对象而return输出。如果没有，就return出我们创建的那个对象。
 
 var new2 = function(Func) {
-  1.创建个对象
+  1.创建个对象，把Func.prototype这个对象，作为原型对象进行挂载到新对象上的__proyo__
   var obj = Object.create(Func.prototype);
 
   2.改变Func内部属性指向到obj，这个时候其实obj就是Func的实例了。并执行接收
@@ -63,8 +63,10 @@ FN.prototype.hi = function(argument) {
   console.log(hi);
 };
 -----------------------------
+【第一种】
 var obj = new FN();
 -----------------------------
+【第二种】
 var obj = Object.create(FN.prototype);
 FN.call(obj);
 

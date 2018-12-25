@@ -25,12 +25,42 @@ performance.getEntries().forEach( function(ele, index) {
   console.log(ele);
 });
 
-3.Error事件捕获：捕获阶段可以拿到错误。必须是先注册，在进行事件监听。
+3.Error事件捕获：捕获阶段可以拿到错误。必须是最先放在head里注册，进行事件监听。
 window.addEventListener("error",function(e){},true);
 ```
 
+### 跨域的JS如何捕获
 * 跨域的JS可以被捕获到么？错误提示是什么？怎么处理？
+```
+1.在客户端设置：在script标签上增加crossorigin属性。
+2.在服务端设置：Access-Control-Allow-Origin:*
+nodejs express配置：
+app.all('/test', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+});
+
+nginx配置：
+location ^~ /test {
+    add_header 'Access-Control-Allow-Origin' '*';
+    add_header 'Access-Control-Allow-Credentials' 'true';
+    add_header 'Access-Control-Allow-Methods' 'OPTION, POST, GET';
+    add_header 'Access-Control-Allow-Headers' 'X-Requested-With, Content-Type';
+}
+```
 
 ### 错误上报的基本原理
 
+* 1.采用ajax通信方式上报
+* 2.利用Image对象上报:其实把所有的连接，新建new Image(),src访问，错误捕获。优点：不需要借助任何第三方插件，
+```
+var img = new Image();
+img.src = 'http://www.baidu.com/test.js';
+img.onerror = function(e) {
+  console.log(e);
+};
+```
 

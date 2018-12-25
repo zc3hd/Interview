@@ -1,7 +1,7 @@
 * {
   padding: 0;
   margin: 0;
-  white-space: nowrap;
+/*   white-space: nowrap; */
   transition: all 0.3s ease-in;
 }
 
@@ -10,7 +10,6 @@ body {
   width: 100%;
   height: 100%;
   font-family: 'Microsoft Yahei';
-  overflow: hidden;
 }
 
 .app {
@@ -91,22 +90,28 @@ body {
   // table
   >.box_4 {
     width: 100%;
-    height: 100px;
+    height: 200px;
     margin-bottom: 10px;
     display: table;
     >div {
       display: table-cell;
-      height: 100%;
+      /* height: 100%; */
     }
     >.left {
       width: 300px;
+      width: 100%;
+      height: 50px;
       background-color: blue;
     }
     >.center {
       background-color: green;
+      width: 100%;
+      height: auto;
     }
     >.right {
       width: 300px;
+      width: 100%;
+      height: 50px;
       background-color: blue;
     }
   }
@@ -115,8 +120,8 @@ body {
     width: 100%;
     margin-bottom: 10px;
     display: grid;
-    grid-template-rows:100px;
-    grid-template-columns:300px auto 300px;
+    grid-template-rows: 100px;
+    grid-template-columns: 300px auto 300px;
     >div {
       /* display: table-cell; */
       height: 100%;
@@ -130,6 +135,40 @@ body {
     }
     >.right {
       /* width: 300px; */
+      background-color: blue;
+    }
+  }
+  // ============================
+  // ============================
+  // flex
+  >.flex_learn {
+    width: 100%;
+    height: 100%;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: flex-start;
+    background-color: #ccc;
+    >div{
+      height: 160px;
+    }
+    >.left {
+      width: 60%;
+      /* height: 150px; */
+      background-color: blue;
+    }
+    >.center {
+      // height: 15%;
+      width: 15%;
+      /* flex: 1; */
+      /* width: 200px; */
+      background-color: green;
+    }
+    >.right {
+      width: 30%;
+      /* height: 350px; */
       background-color: blue;
     }
   }

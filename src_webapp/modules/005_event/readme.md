@@ -53,8 +53,6 @@ document.getElementById("box").addEventListener("click", function() {
 }, true);
 ```
 
-
-
 ### event对象的常见应用
 
 ```
