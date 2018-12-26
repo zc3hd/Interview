@@ -63,7 +63,7 @@ var sl_2 = new s_1();
 sl_1.arr.push("a");
 console.log(sl_2.arr);  //[1,2,3,"a"]
 --------------------------------------
-【3.call+prototype】解决上面问题
+【3.call+Object.create(prototype)】解决上面问题
 function P(argument) {
   this.name = "p";
 }

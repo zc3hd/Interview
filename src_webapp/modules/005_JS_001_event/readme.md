@@ -76,14 +76,14 @@ ev.target
 
 * 真心搞不懂这个有什么用。
 ```
-var ev = document.getElementById("box");
+var DOM = document.getElementById("box");
 var eve = new Event("cc");
-ev.addEventListener('cc',function(){
+DOM.addEventListener('cc',function(){
     ...
 });
 
 //执行
-ev.dispatchEvent(eve);
+DOM.dispatchEvent(eve);
 
 CustomEvent事件对象，后面可以接一个参数。
 ```
