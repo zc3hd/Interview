@@ -1,19 +1,5 @@
 'use strict';
-var one = './src_webapp/modules/011_methods/';
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+var one = './src_webapp/modules/007_JS_all/';
 
 
 
@@ -45,11 +31,7 @@ var opts = {
 
 
 
-// 开发环境key
-var env = process.env.NODE_ENV;
-
-// console.log(env);
-// return;
+// *****************************************************依赖包
 
 var path = require('path');
 var gulp = require('gulp');
@@ -57,27 +39,31 @@ var fs = require('fs-extra');
 
 // 全局配置
 var conf = require('./conf.js');
-var nodemon = require('gulp-nodemon');
+
+// 开发环境
+var env = process.env.NODE_ENV;
+
+
 // 服务器
 var browserSync = require('browser-sync').create();
 var reload = browserSync.reload;
+// 后台服务器重启
+var nodemon = require('gulp-nodemon');
 
 // html
 var htmlmin = require('gulp-htmlmin');
 // JS
-// var uglify = require('gulp-uglify');
-const uglify = require('gulp-uglifyes');
+var uglify = require('gulp-uglify');
 var babel = require('gulp-babel');
-// 取消严格模式
-var removeUseStrict = require("gulp-remove-use-strict");
-
 // css
 var cssnano = require('gulp-cssnano');
 var less = require('gulp-less');
 var autoprefixer = require('gulp-autoprefixer');
 // img
-var imagemin = require('gulp-imagemin'), // 图片压缩
-  pngquant = require('imagemin-pngquant'); // 深度压缩 
+// 图片压缩
+var imagemin = require('gulp-imagemin');
+// 深度压缩 
+var pngquant = require('imagemin-pngquant');
 
 
 // 错误阻止
@@ -88,6 +74,8 @@ var rename = require('gulp-rename');
 var sourcemaps = require('gulp-sourcemaps');
 // 只更新修改过的文件
 var changed = require('gulp-changed');
+
+// *****************************************************依赖包
 
 
 
@@ -104,34 +92,10 @@ opts.one_dist = arr.join('/');
 
 
 
-var server_opts = null
-  // 静态服务器 + 监听 html,css 文件
-gulp.task('serve', ['node'], function() {
 
-  switch (env) {
-    case "dev":
-      // 前后端开发模式
-      server_opts = {
-        proxy: 'http://localhost:' + conf.api_port,
-        browser: 'chrome',
-        notify: false,
-        //这个是browserSync对http://localhost:3000实现的代理端口
-        port: conf.dev_port
-      };
-      break;
-    case "dev_web":
-      // 前端开发模式
-      server_opts = {
-        notify: false,
-        server: path.resolve(__dirname, opts.dist),
-        index: './index.html',
-        port: conf.dev_port,
-        logConnections: true
-      };
-      break;
-  }
-  // 启动代理服务器。
-  browserSync.init(server_opts);
+
+// 启动代理/静态服务器 监听src_webpack文件
+gulp.task('serve', ['bs'], function() {
 
 
   // 监听 html
@@ -145,28 +109,55 @@ gulp.task('serve', ['node'], function() {
 });
 
 
+// 启动代理/静态服务器 
 
-// 监听node的服务。
-gulp.task("node", function() {
-  console.log(env);
-  switch (env) {
-    case "dev":
-      nodemon({
-        script: './api_server/app.js',
-        ignore: [
-          "./src_webapp/",
-          "./webapp/",
-          "./gulpfile.js",
-        ],
-        env: { 'NODE_ENV': 'development' }  
+var http = require("http");
+gulp.task('bs', function() {
+
+  var opt = {
+    host: 'localhost',
+    port: conf.api_port,
+    method: 'POST',
+    path: conf.test_api,
+    headers: {
+      "Content-Type": 'application/json',
+    }
+  };
+
+
+  var body = '';
+  // api成功开启
+  var req = http.request(opt, function(res) {
+      if (res.statusCode == 200) {
+        // browserSync启动代理服务器
+        browserSync.init({
+          // 代理端口
+          proxy: 'http://localhost:' + conf.api_port,
+          browser: 'chrome',
+          notify: false,
+          //代理端口
+          port: conf.dev_port
+        });
+        console.log('browserSync启动--->代理服务');
+      }
+    })
+    // api 服务没有开启,
+    .on('error', function(e) {
+      // browserSync启动静态服务器
+      browserSync.init({
+        notify: false,
+        server: path.resolve(__dirname, opts.dist),
+        index: './index.html',
+        port: conf.dev_port,
+        logConnections: true
       });
-      break;
-    case "dev_web":
-      console.log("no api server");
-      break;
-  }
+      console.log('browserSync启动--->静态服务');
+    });
+  req.end();
 
 });
+
+
 
 
 // html
@@ -252,17 +243,12 @@ gulp.task('js', function() {
     // .pipe(rename({
     //   suffix: '.min'
     // }))
-
     // 转语法
     // .pipe(babel({
-    //   presets: [
-    //     'es2015',
-    //   ]
+    //   presets: ['es2015']
     // }))
-    // 去除严格，这个不管用
-    // .pipe(removeUseStrict())
-    // 压缩
-    .pipe(uglify())
+    // 保留部分注释
+    // .pipe(uglify())
     // 输出路径
     .pipe(gulp.dest(opts.one_dist))
     .pipe(reload({

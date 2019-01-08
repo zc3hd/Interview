@@ -1,54 +1,40 @@
-// $('#sp_2')[0].on('error',function (e) {
-// 	console.log(e);
-// });
+// function fn(obj) {
+// 	obj = obj||{};
 
 
-// document.getElementById("sp_2").addEventListener("error", function(e) {
-//   console.log(e);
-// }, false);
 
-
-// document.getElementById("img").onerror = function(e) {
-//   console.log(e);
-// };
-
-// document.getElementById("sp_2").onerror = function(e) {
-//   console.log(e);
-// };
-
-
-// performance.getEntries().forEach( function(ele, index) {
-// 	console.log(ele);
-// });
-// function add (num) {
 
 // }
 
-// 
-// $("img").error(function(e){
-// 	console.log(e);
-// });
-var img = new Image()
-img.src = 'http://www.baidu.com/test.js';
-img.onerror = function(e) {
-  console.log(e);
-};
 
-window.addEventListener("error", function(e) {
-  console.log(e)
-}, true);
+// setInterval(function () {
+// 	// console.log(1);
+// 	// return {
+// 	// 	a:$,
+// 	// 	b:$,
+// 	// 	c:$,
+// 	// 	f:$,
+// 	// 	g:$,
+// 	// 	h:$,
+// 	// 	j:$,
+// 	// };
+// 	// a = null;
+// },1);
 
 
+var arr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+// var index = 2;
+// var sliced = arr.slice(3);
+// console.log(sliced);
 
-// var all = 0;
-// var add = function  (num) {
-// 	all+=num;
-// 	return add;
-// };
-// add.all = 0;
-// add(10)(20)(10)(20)(30);
-// console.log(all);
+// // ;
+// console.log(arr.push.apply(arr, sliced))
 
-// window.onerror = function (e) {
-// 	console.log(e);
-// };
+// console.log(arr);
+// // ;
+
+// console.log(arr.push(10))
+// arr.length = arr.length-1;
+console.log(arr.push(9));
+
+// console.log(arr.pop())
