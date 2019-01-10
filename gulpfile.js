@@ -1,5 +1,5 @@
 'use strict';
-var one = './src_webapp/modules/007_JS_all/';
+var one = './src_webapp/modules/000_demo_cc/';
 
 
 
