@@ -1,0 +1,145 @@
+# node
+
+### 1.特性
+
+* 单线程、非阻塞IO、事假环机制
+* V8是node虚拟机，js运行环境；
+
+### 2.全局对象
+
+* process, console, Buffer和exports
+
+### 3.核心模块
+
+* EventEmitter, Stream, FS, Net和全局对象
+
+### 3.EventEmitter
+
+* 如何实现EventEmitter？
+* 主要分三步：定义一个子类，调用构造函数，继承EventEmitter
+```
+var util = require('util');
+var EventEmitter = require('events').EventEmitter;
+
+// 构造函数
+function MyEmitter() {
+  EventEmitter.call(this);
+} 
+// 继承
+util.inherits(MyEmitter, EventEmitter); 
+
+var em = new MyEmitter();
+em.on('hello', function(data) {
+  console.log('收到事件hello的数据:', data);
+});
+setTimeout(function(argument) {
+  // 接收事件，并打印到控制台
+  em.emit('hello', 'EventEmitter传递消息真方便!');
+},200);
+```
+
+* 应用：
+```
+1) 模块间传递消息 
+2) 回调函数内外传递消息 
+3) 处理流数据，因为流是在EventEmitter基础上实现的. 
+```
+
+* EventEmitter中的newListenser事件有什么用处?
+* newListener可以用来做事件机制的反射，特殊应用，事件管理等．当任何on事件添加到EventEmitter时，就会触发newListener事件，基于这种模式，我们可以做很多自定义处理；
+```
+var emitter3 = new MyEmitter();
+
+新注册的事件，都会被这个监听到
+emitter3.on('newListener', function(name, listener) {
+    console.log("新事件的名字:", name);
+    console.log("新事件的代码:", listener);
+    setTimeout(function(){ console.log("我是自定义延时处理机制"); }, 1000);
+});
+
+emitter3.on('hello', function(){
+    console.log('hello　node');
+});
+```
+
+### 4.node的错误捕获
+
+*  domain来统一处理错误事件
+```
+var domain = require('domain');
+var myDomain = domain.create();
+
+// 接收事件并打印
+myDomain.on('error', function(err) {
+  console.log('domain接收到的错误事件:', err);
+}); 
+
+// 开始运行下面的函数
+myDomain.run(function() {
+  var emitter1 = new MyEmitter();
+  emitter1.emit('error', '错误事件来自emitter1');
+  var emitter2 = new MyEmitter();
+  emitter2.emit('error', '错误事件来自emitter2');
+});
+```
+
+### 5.Stream
+
+###### 1.什么是Stream?
+* stream是基于事件EventEmitter的数据管理模式．由各种不同的抽象接口组成，主要包括可写，可读，可读写，可转换等几种类型．
+
+###### 2.Stream有什么好处?
+* 非阻塞式数据处理提升效率，片断处理，节省内存，管道处理方便可扩展等.
+
+###### 3.demo:读取流
+```
+const fs = require('fs')
+
+//流的方式读取文件
+var readStream = fs.createReadStream('readme.md');
+
+var str = ''; /*保存数据*/
+var count = 0;  /*次数*/
+readStream.on('data', function(chunk) {   
+  str += chunk;   
+  count++;
+
+})
+
+//读取完成
+readStream.on('end', function(chunk) {   
+  console.log(count);   
+  console.log(str);
+})
+
+//读取失败
+readStream.on('error', function(err) {   
+  console.log(err);
+});
+```
+
+##### 4.demo:写入流
+```
+var fs = require("fs");
+var data = '我是从数据库获取的数据，我要保存起来11\n';
+
+// 创建一个可以写入的流，写入到文件 output.txt 中
+var writerStream = fs.createWriteStream('output.txt');
+
+for(var i=0;i<100;i++){
+    writerStream.write(data,'utf8');
+}
+
+//标记写入完成
+writerStream.end();
+
+// 接受完成
+writerStream.on('finish',function(){
+    console.log('写入完成');
+});
+
+//失败
+writerStream.on('error',function(){
+    console.log('写入失败');
+});
+```

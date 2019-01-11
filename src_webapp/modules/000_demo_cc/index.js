@@ -222,10 +222,10 @@ App.prototype = {
         $('#box')
           .on('mousedown', '.item', function(e) {
 
-            
+            // console.log(e.touches[0]);
             // 目标DOM
             me.ac_dom = e.currentTarget;
-            console.log(1);
+            
             $(me.ac_dom).addClass('ac');
 
             // DOM的位置

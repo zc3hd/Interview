@@ -136,5 +136,20 @@ window.addEventListener("message",function(ev){
 * WebSocket: 我们使用Socket.io，它很好地封装了webSocket接口，提供了更简单、灵活的接口，也对不支持webSocket的浏览器提供了向下兼容。
 
 * CORS:通信标准。可理解为支持跨域通信的AJAX。浏览器在识别发送一个跨域请求时，会在头部加一个orgin，支持跨域通信。
+```
+res.writeHead(200, {
+    "Content-Type": "text/html; charset=UTF-8",
+    "Access-Control-Allow-Origin":'http://localhost',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type'
+});
+
+app.all('*', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With,Content-Type");
+    res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+    next();
+});
+```
 
 * 前端webpack/browserify设置服务代理

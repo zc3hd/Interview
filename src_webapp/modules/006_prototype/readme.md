@@ -39,7 +39,7 @@ var new2 = function(Func) {
   1.创建个对象，把Func.prototype这个对象，作为原型对象进行挂载到新对象上的__proyo__
   var obj = Object.create(Func.prototype);
 
-  2.改变Func内部属性指向到obj，这个时候其实obj就是Func的实例了。并执行接收
+  2.改变Func内部属性指向到obj，这个时候其实obj就是Func的实例了。并执行函数
   var func_obj = Func.call(obj);
 
   3.判断回来的是不是对象，是就输出
