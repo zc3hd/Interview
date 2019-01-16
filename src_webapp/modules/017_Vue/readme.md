@@ -1,11 +1,149 @@
 # vue
 
-### 1.数据双向绑定原理
-* 就是做了两件事：
+### less(css的预编译)
+```
+第一步：三个包（style-loader!css-loader!less-loader）
+第二步：配置webpack.config.js，
+{
+  test: /\.less$/,
+  loader: 'style-loader!css-loader!less-loader'
+},
+第三步：Vue <style lang="less">
+
+有哪几大特性:
+1、可以用变量，例如（$变量名称=值）；
+2、节点式书写
+3、函数
+```
+
+### vuex
+```
+vue框架中状态管理机。
+
+在main.js引入store，注入。
+export default new Vuex.Store({
+  // getters: getters,
+  state: state,
+  // actions: actions,
+  mutations: mutations,
+});
+
+import store from './store.js';
+new Vue({
+
+  el: '#app',
+  // 这样的模式可以先测试为单个模块
+  render: h => h(App),
+  // router: router,
+  // =====================vuex
+  store:store,
+});
+场景有：管理全局的数据状态和传递数据，传递方法；
+```
+
+### vue生命周期的理解
+
+```
+【创建前/后】
+1.在beforeCreated阶段，vue实例的挂载元素$el和数据对象data都为undefined，还未初始化。
+2.在created阶段，vue实例的数据对象data有了，$el还没有进行挂载
+
+【载入前/后】
+1.在beforeMount阶段，vue实例的$el和data都初始化了，但还是挂载之前为虚拟的dom节点，data.message还未替换。
+2.在mounted阶段，vue实例挂载完成，data.message成功渲染。
+
+【更新前/后】当data变化时，会触发beforeUpdate和updated方法。
+
+【销毁前/后】1.在执行destroy方法后，对data的改变不会再触发周期函数，说明此时vue实例已经解除了事件监听以及和dom的绑定，但是dom结构依然存在
+```
+
+### vue.cli中怎样使用自定义的组件
+```
+第一步：在components目录新建你的组件文件（smithButton.vue），script一定要export default {}
+
+第二步：在需要用的页面（组件）中导入：import smithButton from ‘../components/smithButton.vue’
+
+第三步：注入到vue的子组件的components属性上面,components:{smithButton}
+
+第四步：在template视图view中使用，<smith-button>  </smith-button>
+
+问题有：smithButton命名，使用的时候则smith-button。
+```
+
+### Vue的template编译
+
+* 首先，通过compile编译器把template编译成AST语法树（abstract syntax tree 即 源代码的抽象语法结构的树状表现形式），compile是createCompiler的返回值，createCompiler是用以创建编译器的。另外compile还负责合并option。| 就是解析模板，把那些指令要在那些DOM节点上，相应的指令响应那些函数；
+* 
+* AST会经过generate（将AST语法树转化成render funtion字符串的过程）得到render函数，render的返回值是VNode，VNode是Vue的虚拟DOM节点，里面有（标签名、子节点、文本等等）;这里的Vnode其实就是我们订阅者；（和绑定属性相关的DOM节点）
+
+---------
+
+### vue-router实现原理  spa的实现原理
+##### 1.hash模式
+
+* 随着 ajax 的流行，异步数据请求交互运行在不刷新浏览器的情况下进行。而异步交互体验的更高级版本就是 SPA —— 单页应用。
+* 【spa】单页应用不仅仅是在页面交互是无刷新的，连页面跳转都是无刷新的，为了实现单页应用，所以就有了前端路由。
+* 类似于服务端路由，前端路由实现起来其实也很简单，就是匹配不同的 url 路径，进行解析，然后动态的渲染出区域 html 内容。
+* 但是这样存在一个问题，就是 url 每次变化的时候，都会造成页面的刷新。那解决问题的思路便是在改变 url 的情况下，保证页面的不刷新。在 2014 年之前，大家是通过 hash 来实现路由，url hash 就是类似于：
+```
+http://www.xxx.com/#/login
+```
+* 这种 #。后面 hash 值的变化，并不会导致浏览器向服务器发出请求，浏览器不发出请求，也就不会刷新页面。另外每次 hash 值的变化，还会触发hashchange 这个事件，通过这个事件我们就可以知道 hash 值发生了哪些变化。然后我们便可以监听hashchange来实现更新页面部分内容的操作：
+```
+function matchAndUpdate () {
+   // todo 匹配 hash 做 dom 更新操作
+}
+window.addEventListener('hashchange', matchAndUpdate)
+```
+
+##### 2.history 模式
+
+* 14年后，因为HTML5标准发布。多了两个 API，pushState 和 replaceState，通过这两个 API 可以改变 url 地址且不会发送请求。
+* 同时还有 popstate 事件。通过这些就能用另一种方式来实现前端路由了，但原理都是跟 hash 实现相同的。
+* 用了 HTML5 的实现，单页路由的 url 就不会多出一个#，变得更加美观。但因为没有 # 号，所以当用户刷新页面之类的操作时，浏览器还是会给服务器发送请求。为了避免出现这种情况，所以这个实现需要服务器的支持，需要把所有路由都重定向到根页面。
+```
+function matchAndUpdate () {
+   // todo 匹配路径 做 dom 更新操作
+}
+window.addEventListener('popstate', matchAndUpdate)
+```
+
+### vue-router应用
+```
+1.active-class是哪个组件的属性？
+vue-router模块的router-link组件。
+vue用来写路由一个插件。router-link、router-view
+
+2.动态路由？怎么获取传过来的动态参数？ 
+对path属性加上/:id。
+使用router对象的params.id {{$route.params | json}}
+
+3.vue-router有哪几种导航钩子？    
+【1】全局导航钩子：router.beforeEach(to,from,next)，前置钩子。
+【2】组件内的钩子；
+【3】配置路由钩子
+```
+
+------------------------
+
+### mvvm框架
+* Mvvm定义MVVM是Model-View-ViewModel的简写。即模型-视图-视图模型。
+* 【模型】指的是后端传递的数据。
+* 【视图】指的是所看到的页面。
+* 【视图模型】mvvm模式的核心，它是连接view和model的桥梁。
+
+* 它有两个方向：一是将【模型】转化成【视图】，即将后端传递的数据转化成所看到的页面。实现的方式是：数据绑定。
+* 二是将【视图】转化成【模型】，即将所看到的页面转化成后端的数据。实现的方式是：DOM 事件监听。这两个方向都实现的，我们称之为数据的双向绑定。
+* 
+* 总结：在MVVM的框架下视图和模型是不能直接通信的。它们通过ViewModel来通信，ViewModel通常要实现一个observer观察者，当数据发生变化，ViewModel能够监听到数据的这种变化，然后通知到对应的视图做自动更新，而当用户操作视图，ViewModel也能监听到视图的变化，然后通知数据做改动，这实际上就实现了数据的双向绑定。
+
+### VUE数据双向绑定原理
+* 就是做了三件事：
 ```
 1.属性监听：把data上的所有属性进行获取值的监听，值改变时通知所有订阅者进行更新数据。
-2.模板解析：解析的过程就是把和属性相关的所有的DOM订阅者进行收集，以便为属性监听时可以进行订阅者更新。
-3.实现过程：
+2.模板解析：
+ 2.1解析的过程就是把和属性相关的所有的DOM订阅者收集，以便为属性监听时可以进行订阅者更新。
+ 2.2 还有个事，就是所有指令相关的DOM进行事件的绑定；
 ```
 
 * 初始化函数
@@ -23,7 +161,7 @@ myVue.prototype._init = function(options) {
   this._binding = {};
 
   // 设置属性值的监听
-  this._obverse(this.$data);
+  this._observer(this.$data);
     
   // 模板解析：就是绑定属性和订阅者。view与model进行绑定。视图view就是我们的指令，model就是真实的DOM。
   this._complie(this.$el);
@@ -32,7 +170,7 @@ myVue.prototype._init = function(options) {
 
 * 设置函数属性监听
 ```
-myVue.prototype._obverse = function(obj) {
+myVue.prototype._observer = function(obj) {
   var value;
   for (key in obj) {
     if (obj.hasOwnProperty(key)) {
@@ -44,7 +182,7 @@ myVue.prototype._obverse = function(obj) {
 
       value = obj[key];
       if (typeof value === 'object') {
-        this._obverse(value);
+        this._observer(value);
       }
 
       var binding = this._binding[key];
@@ -80,8 +218,10 @@ myVue.prototype._obverse = function(obj) {
 }
 ```
 
-* 模板解析的过程就是 view和model绑定，
-* 绑定收集：实质就是给属性进行和该属性绑定有关的DOM订阅者的收集。就是view的指令，与该指令绑定的model（DOM）的相应绑定，全局进行收集
+* 模板解析
+* 过程1: view和model(包括数据和方法)绑定；
+* 过程2：属性和该属性绑定有关的DOM订阅者进行收集。就是view上的指令，与该指令相关的DOM进行订阅者绑定、收集；
+
 * 订阅者：就是和该属性绑定的DOM
 * 订阅者更新：订阅者就是更新DOM实际要更新的属性。
 ```
@@ -199,165 +339,16 @@ window.onload = function() {
   });
 }
 ```
+* vue.js 是采用数据劫持结合发布者-订阅者模式的方式，通过Object.defineProperty()来劫持各个属性的setter，getter，在数据变动时发布消息给订阅者，触发相应的监听回调。
 
+----------------
 
-### other
-```
-1.active-class是哪个组件的属性？
-vue-router模块的router-link组件。
-
-2.动态路由？怎么获取传过来的动态参数？ 
-对path属性加上/:id。
-使用router对象的params.id {{$route.params | json}}
-
-3.vue-router有哪几种导航钩子？    
-三种，一种是全局导航钩子：router.beforeEach(to,from,next)，作用：跳转前进行判断拦截。第二种：组件内的钩子；第三种：单独路由独享组件
-
-4.less是什么？有哪几大特性？
-答：css的预编译。
-第一步：三个包（style-loader!css-loader!less-loader）
-第二步：配置webpack.config.js，
-{
-  test: /\.less$/,
-  loader: 'style-loader!css-loader!less-loader'
-},
-第三步：Vue <style lang="less">
-
-有哪几大特性:
-1、可以用变量，例如（$变量名称=值）；
-2、节点式书写
-3、函数
-
-
-5、v-model是什么？怎么使用？vue中标签怎么绑定事件？
-答：可以实现双向绑定，
-指令（v-class、v-for、v-if、v-show、v-on）。vue的model层的data属性。
-绑定事件：<input @click=doLog() />
-
-
-6、axios是什么？怎么使用？
-答：请求后台资源的模块。
-返回在.then函数中如果成功，失败则是在.catch函数中
-
-7、vuex是什么？怎么使用？哪种功能场景使用它？
-答：vue框架中状态管理机。
-在main.js引入store，注入。
-export default new Vuex.Store({
-  // getters: getters,
-  state: state,
-  // actions: actions,
-  mutations: mutations,
-});
-
-import store from './store.js';
-new Vue({
-
-  el: '#app',
-  // 这样的模式可以先测试为单个模块
-  render: h => h(App),
-  // router: router,
-  // =====================vuex
-  store:store,
-});
-场景有：管理全局的数据状态和传递数据，传递方法；
-
-
-8、mvvm框架是什么？它和其它框架（jquery）的区别是什么？哪些场景适合？
-答：一个model+view+viewModel框架，数据模型model，viewModel连接两个
-区别：vue数据驱动，通过数据来显示视图层而不是节点操作。
-场景：数据操作比较多的场景，更加便捷
+### VUE特性
+* 1.轻量级的框架
+* 2.双向数据绑定
+* 3.指令
+* 4.插件化
 
 
 
-12、自定义指令（v-check、v-focus）的方法有哪些？它有哪些钩子函数？还有哪些钩子函数参数？
-答：
-全局定义指令：
-在vue对象的directive方法里面有两个参数，一个是指令名称，另外一个是函数。
 
-组件内定义指令：
-directives钩子函数：bind（绑定事件触发）、inserted(节点插入的时候触发)、update（组件内相关更新）
-钩子函数参数：el、binding
-
-
-13、说出至少4种vue当中的指令和它的用法？
-答：v-if：判断是否隐藏；v-for：数据循环出来；v-bind:class：绑定一个属性；v-model：实现双向绑定
-
-14、vue-router是什么？它有哪些组件？
-答：vue用来写路由一个插件。router-link、router-view
-
-15、导航钩子有哪些？它们有哪些参数？
-答：导航钩子有：a/全局钩子和组件内独享的钩子。
-b/beforeRouteEnter、afterEnter、beforeRouterUpdate、beforeRouteLeave
-
-参数：有to（去的那个路由）、from（离开的路由）、next（一定要用这个函数才能去到下一个路由，如果不用就拦截）
-
-
-16、Vue的双向数据绑定原理是什么？
-答：vue.js 是采用数据劫持结合发布者-订阅者模式的方式，通过Object.defineProperty()来劫持各个属性的setter，getter，在数据变动时发布消息给订阅者，触发相应的监听回调。
-
-
-
-```
-
-```
-17、请详细说下你对vue生命周期的理解？
-答：
-【创建前/后】
-1.在beforeCreated阶段，vue实例的挂载元素$el和数据对象data都为undefined，还未初始化。
-2.在created阶段，vue实例的数据对象data有了，$el还没有进行挂载
-
-【载入前/后】
-1.在beforeMount阶段，vue实例的$el和data都初始化了，但还是挂载之前为虚拟的dom节点，data.message还未替换。
-2.在mounted阶段，vue实例挂载完成，data.message成功渲染。
-
-【更新前/后】当data变化时，会触发beforeUpdate和updated方法。
-
-【销毁前/后】1.在执行destroy方法后，对data的改变不会再触发周期函数，说明此时vue实例已经解除了事件监听以及和dom的绑定，但是dom结构依然存在
-```
-
-```
-18、请说下封装 vue 组件的过程？
-答：首先，组件可以提升整个项目的开发效率。能够把页面抽象成多个相对独立的模块，解决了我们传统项目开发：效率低、难维护、复用性等问题。
-然后，使用Vue.extend方法创建一个组件，然后使用Vue.component方法注册组件。
-
-20、vue-loader是什么？使用它的用途有哪些？
-答：解析.vue文件的一个加载器，跟template/js/style转换成js模块。
-用途：js可以写es6、style样式可以scss或less、template可以加jade等
-
-21、请说出vue.cli项目中src目录每个文件夹和文件的用法？
-答：assets文件夹是放静态资源；components是放组件；router是定义路由相关的配置;
-view视图；app.vue是一个应用主组件；main.js是入口文件
-
-```
-
-```
-22、vue.cli中怎样使用自定义的组件？
-答：
-第一步：在components目录新建你的组件文件（smithButton.vue），script一定要export default {}
-第二步：在需要用的页面（组件）中导入：import smithButton from ‘../components/smithButton.vue’
-第三步：注入到vue的子组件的components属性上面,components:{smithButton}
-第四步：在template视图view中使用，<smith-button>  </smith-button>
-问题有：smithButton命名，使用的时候则smith-button。
-```
-
-```
-23、聊聊你对Vue.js的template编译的理解？
-答：简而言之，就是先转化成AST树，再得到的render函数返回VNode（Vue的虚拟DOM节点）
-详情步骤：
-
-首先，通过compile编译器把template编译成AST语法树（abstract syntax tree 即 源代码的抽象语法结构的树状表现形式），compile是createCompiler的返回值，createCompiler是用以创建编译器的。另外compile还负责合并option。
-
-然后，AST会经过generate（将AST语法树转化成render funtion字符串的过程）得到render函数，render的返回值是VNode，VNode是Vue的虚拟DOM节点，里面有（标签名、子节点、文本等等）
-
-挑战一下：
-1、vue响应式原理？
-2、vue-router实现原理？
-4、vue如何实现父子组件通信，以及非父子组件通信？
-5、vuejs与angularjs以及react的区别？
-6、vuex是用来做什么的？
-7、vue源码结构
-```
-
-* 为什么要选vue？与其它框架对比的优势和劣势？
-* 1.vue组件化开发，更单一功能模块进行组件化，更好的维护和叠加优化
-* 2.更专注业务，因为直接是数据和view的写代码；
