@@ -44,7 +44,7 @@ s_1.prototype.s_fn = function(argument){
   console.log("s_fn");
 };
 --------------------------------------
-【2.prototype继承】
+【2.实例作为原型对象的继承】
 缺点：就是被继承的类的属性有对象的时候，比如下面的arr,被继承的时候，是把属性的对象地址继承过去。实例化的时候，实例们都是引用的同一个地址。所以修改一个实例的该属性值，其他实例也会变化。
 function P(argument) {
   this.name = "p";
@@ -99,3 +99,8 @@ class Worker extends Person {
 }
 ```
 
+### apply, call和bind有什么区别?
+
+* 都是把前面的函数内对象属性复制到后面的对象上。
+* apply,call是直接执行函数调用，apply和call的区别是apply接受数组作为参数，而call是接受逗号分隔的无限多个参数列表；
+* bind是绑定，执行需要再次调用

@@ -1,10 +1,13 @@
+# 作用域
+
+* js里边叫函数作用域，就是一个变量在全函数里有效．比如有个变量p1在函数最后一行定义，第一行也有效，但是值是undefined.
+
 # 闭包
 
+* 定义：外部可以调用函数内部的函数，闭包包的是变量
+* 原因：为什么要包起来？实现变量名的私有化，在外界需要的时候又可以访问改变。
+* 缺点：闭包的数据常驻内存，不清除的话，会使内存溢出
 ```
-a. 定义：外部可以调用函数内部的函数，闭包包的是变量
-b. 原因：为什么要包起来？实现变量名的私有化，在外界需要的时候又可以访问改变。
-c. 缺点：闭包的数据常驻内存，不清除的话，会使内存溢出
-
 function test_fn() {
   var _num = 0;
   return function() {
@@ -22,8 +25,12 @@ fn这个变量相当于接受了一个带有初始化变量的函数，
 下次执行的时候，内部的变量再次被执行。
 一直会持有内部的变量和状态。
 这就是闭包。
--------------------------------------------------
-DOM事件绑定
+```
+
+* 应用:保存变量的数据
+* 如何应用：创建函数，传入变量，达到保存变量的目的
+```
+1.DOM事件绑定
 for (var i = 0; i < spans.length; i++) {
   spans[i].onmouseover = function(num) {
     return function() {
@@ -33,8 +40,8 @@ for (var i = 0; i < spans.length; i++) {
 }
 可以看到onmouseover后面这个函数自执行，返回个带有初始化状态变量的函数，
 也是就是每个函数内部的i，被保存下来。
--------------------------------------------------
-for()循环里的异步函数
+
+2.for()循环里的异步函数
 for (var i = 0; i < arr.length; i++) {
   setTimeout(function(argument) {
       console.log(i);
@@ -55,4 +62,20 @@ arr.forEach(function(ele, index) {
       console.log(ele,index);
     }, 1000);
 });
+```
+
+### fn内置参数caller, callee和arguments分别是什么?
+
+```
+function parent(param1, param2, param3) {
+  child(param1, param2, param3);
+}
+
+function child() {
+  console.log(arguments); // { '0': 'mqin1', '1': 'mqin2', '2': 'mqin3' }
+  console.log(arguments.callee); // [Function: child] 雇员
+  console.log(child.caller); // [Function: parent]  雇主
+}
+
+parent('mqin1', 'mqin2', 'mqin3');
 ```

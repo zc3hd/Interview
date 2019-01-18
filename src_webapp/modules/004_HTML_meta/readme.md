@@ -86,3 +86,20 @@
 ```
 <meta http-equiv="Set-Cookie" content="User=Lxxyx; path=/; expires=Sunday, 10-Jan-16 10:00:00 GMT">
 ```
+
+--------------------
+
+* sessionStorage 、localStorage 和 cookie 之间的区别
+```
+1)、存储内容是否发送到服务器端：当设置了Cookie后，数据会发送到服务器端，造成一定的宽带浪费；web storage,会将数据保存到本地，不会造成宽带浪费；
+
+(2)、数据存储大小不同：Cookie数据不能超过4K,适用于会话标识；
+web storage数据存储可以达到5M;
+
+(3)、数据存储的有效期限不同：cookie只在设置了Cookid过期时间之前一直有效，即使关闭窗口或者浏览器；
+essionStorage,仅在关闭浏览器之前有效；
+localStorage,数据存储永久有效；
+
+(4)、作用域不同：cookie和localStorage是在同源同窗口中都是共享的；sessionStorage不在不同的浏览器窗口中共享，即使是同一个页面；
+```
+

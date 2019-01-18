@@ -52,23 +52,39 @@ var new2 = function(Func) {
 }
 ```
 
-* Object.create(Func.prototype)创建的对象不一样：
-```
-Object.create(Func.prototype）就是把后面的这个对象，挂载为新生成对象的原型上，即prototype上。
+### this到底是什么
 
-所以创建一个实例可以这样：
-function FN(argument) {
+* 构造函数：是指以后的实例对象，不是构造函数本省；当前执行对象。执行上下文；
+
+### call实现原理
+
+* 最后效果，就是obj的属性被执行了，obj有新挂了新的属性；
+```
+function FN() {
+  this.a =1;
+  console.log(this.b)
 }
-FN.prototype.hi = function(argument) {
-  console.log(hi);
-};
------------------------------
-【第一种】
-var obj = new FN();
------------------------------
-【第二种】
-var obj = Object.create(FN.prototype);
-FN.call(obj);
+var obj = {b:10};
+------------------------------------
+FN.call(obj); //10
+console.log(obj); //{a:1}
+------------------------------------
+【实现过程】
+function _call(fn, obj) {
+  【1】把obj的属性挂载到fn.prototype上面；
+  for(var key in obj){
+    fn.prototype[key] = obj[key];
+  }
+  【2】实例化fn,会把后面的对象属性或方法用来执行
+  var fn_obj = new fn();
+  
+  【3】只是把实例化后的对象的属性再次挂载到obj上
+  for(var _key in fn_obj){
+    obj[_key] = fn_obj[_key];
+  }
+}
 
-obj.__proto__ == FN.prototype  // true
+_call(FN,obj)   //10
+console.log(obj); //{a:1}
 ```
+

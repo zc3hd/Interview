@@ -1,5 +1,5 @@
 'use strict';
-var one = './src_webapp/modules/007_002_JS_all/';
+var one = './src_webapp/modules/007_class_FN_1Object/';
 
 
 
@@ -97,7 +97,6 @@ opts.one_dist = arr.join('/');
 // 启动代理/静态服务器 监听src_webpack文件
 gulp.task('serve', ['bs'], function() {
 
-
   // 监听 html
   gulp.watch(path.join(opts.one, '*.html'), ['html']);
   // 监听 less
@@ -125,7 +124,6 @@ gulp.task('bs', function() {
   };
 
 
-  var body = '';
   // api成功开启
   var req = http.request(opt, function(res) {
       if (res.statusCode == 200) {
@@ -143,6 +141,7 @@ gulp.task('bs', function() {
     })
     // api 服务没有开启,
     .on('error', function(e) {
+      console.log(e);
       // browserSync启动静态服务器
       browserSync.init({
         notify: false,
@@ -154,6 +153,9 @@ gulp.task('bs', function() {
       console.log('browserSync启动--->静态服务');
     });
   req.end();
+
+
+
 
 });
 

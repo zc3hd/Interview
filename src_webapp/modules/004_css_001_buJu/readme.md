@@ -57,11 +57,11 @@
 ```
 Flex容器（flex container），简称"容器"。
 它的所有子元素自动成为容器成员，称为Flex项目（flex item），简称"项目"。
-容器默认存在两根轴：
-水平的主轴（main axis）和垂直的交叉轴（cross axis）。
-主轴的开始位置（与边框的交叉点）叫做main start，结束位置叫做main end；
-交叉轴的开始位置叫做cross start，结束位置叫做cross end。
-项目默认沿主轴排列。单个项目占据的主轴空间叫做main size，占据的交叉轴空间叫做cross size。
+1.容器默认存在两根轴：水平的主轴（main axis）和垂直的交叉轴（cross axis）。
+2.主轴的开始位置（与边框的交叉点）叫做main start，结束位置叫做main end；
+3.交叉轴的开始位置叫做cross start，结束位置叫做cross end。
+4.项目默认沿主轴排列。
+5.单个项目占据的主轴空间叫做main size，占据的交叉轴空间叫做cross size。
 
 以下6个属性设置在容器上：
 flex-direction　　容器内项目的排列方向(默认横向排列)　　
@@ -74,6 +74,7 @@ flex-flow　　以上两个属性的简写方式
 flex-flow: <flex-direction> || <flex-wrap>;
 
 justify-content　　项目在主轴上的对齐方式，其实就是在主轴上怎么排列，就是如何安排这些项目。
+
 justify-content: flex-start | flex-end | center | space-between | space-around;
 flex-start：在主轴上由左或者上开始排列
 flex-end：在主轴上由右或者下开始排列
@@ -139,3 +140,12 @@ grid-template-columns: 300px auto 300px;
 * 定位
 * 定位+盒子模型
 * flex
+
+
+
+* px和em的区别
+```
+相同点：px和em都是长度单位；
+异同点：px的值是固定的，指定是多少就是多少，计算比较容易。em得值不是固定的，并且em会继承父级元素的字体大小。
+浏览器的默认字体高都是16px。所以未经调整的浏览器都符合: 1em=16px。那么12px=0.75em, 10px=0.625em。
+```

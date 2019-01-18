@@ -87,3 +87,6 @@ DOM.dispatchEvent(eve);
 
 CustomEvent事件对象，后面可以接一个参数。
 ```
+
+
+

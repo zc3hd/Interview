@@ -43,15 +43,27 @@ HTML 4.01 Strict/Transitional 严格模式、传统模式
 * DOM改动、CSS改动。
 * 如何避免最小的repaint?就比如你有很多节点你改动或者填入，要形成一段字符串码，一次性拼接完成，然后推到DOM节点中，不要形成一个退一个。
 
-
-
-
-
-
 ### 布局Layout
 
 
 
+* 页面渲染流程
+```
+1.解析HTML文件，创建DOM树。自上而下，遇到任何样式（link、style）与脚本（script）都会阻塞（外部样式不阻塞后续外部脚本的加载）。
+
+2.解析CSS。优先级：浏览器默认设置<用户设置<外部样式<内联样式<HTML中的style样式；
+
+3.将CSS与DOM合并，构建渲染树（Render Tree）
+4.布局和绘制，重绘（repaint）和重排（reflow）
+```
+
+
+* $(document).ready()方法和window.onload有什么区别？
+```
+ (1)、window.onload方法是在网页中所有的元素(包括元素的所有关联文件)完全加载到浏览器后才执行的。
+
+ (2)、$(document).ready() 方法可以在DOM载入就绪时,就调用执行绑定的函数。
+```
 
 
 
