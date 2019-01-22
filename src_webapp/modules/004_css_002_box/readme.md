@@ -8,24 +8,6 @@
 * 标准模型：box-sizing:content-box; 默认
 * IE模型：box-sizing:border-box;
 
-#### JS设置盒模型的宽高
-```
-原生JS只能拿到内联样式的宽和高，为100px。head的link的方式拿不到。
-dom.style.width
-
-IE有个方法可以拿到渲染后的样式,其他浏览器不支持
-dom.currentStyle.width
-
-全部支持：拿到的是100px
-window.getComputedStyle(dom).width
-
-主要是算绝对位置，能拿到四个值、这次拿到的是数值100
-dom.getBoundingClientRect().width
-
-JQ能拿到dom的宽和高，为数值100。
-$('#box').width()
-```
-
 #### 边距重叠
 
 * 兄弟：上下DOM的20px会重叠
@@ -79,10 +61,9 @@ $('#box').width()
   }
 ```
 
-#### BFC：边距重叠解决
+#### BFC：块级格式化上下文  Block Fromatting Context
 
-* 概念：块级格式化上下文。
-* 渲染规则：
+* 解决：
 ```
 1.BFC区域的边距在垂直方向上不发生重叠
 2.BFC的区域不会与浮动元素的边距重叠
@@ -104,7 +85,7 @@ overflow的值不为visible
 #### BFC使用场景
 
 * 修改上面的情况：涉及到规则的1/3/4
-* 左右布局：规则2。不会与浮动元素的边距重叠，FBC区域与外面的浮动元素。
+* 左右布局：规则2。FBC区域与外面的浮动元素,不会与浮动元素的边距重叠，。
 ```
 <div class="box_4">
   <div class="left"></div>

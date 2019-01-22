@@ -72,7 +72,7 @@
 <meta http-equiv="Cache-Control" content="no-siteapp" />
 ```
 
-* expires(网页到期时间):用于设定网页的到期时间，过期后网页必须到服务器上重新传输。
+* expires网页到期时间:用于设定网页的到期时间，过期后网页必须到服务器上重新传输
 ```
 <meta http-equiv="expires" content="Sunday 26 October 2016 01:00 GMT" />
 ```
