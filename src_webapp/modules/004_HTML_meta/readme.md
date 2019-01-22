@@ -103,3 +103,13 @@ localStorage,数据存储永久有效；
 (4)、作用域不同：cookie和localStorage是在同源同窗口中都是共享的；sessionStorage不在不同的浏览器窗口中共享，即使是同一个页面；
 ```
 
+### 3.DNS预解析
+
+* DNS Prefetching是具有此属性的域名不需要用户点击链接就在后台解析，而域名解析和内容载入是串行的网络操作，所以这个方式能减少用户的等待时间，提升用户体验。
+
+```
+1. 用meta信息来告知浏览器, 当前页面要做DNS预解析:
+<meta http-equiv="x-dns-prefetch-control" content="on" />
+2. 在页面header中使用link标签来强制对DNS预解析: 
+<link rel="dns-prefetch" href="http://bdimg.share.baidu.com" />
+```

@@ -16,6 +16,12 @@
 3、函数
 ```
 
+### VUE特性
+* 1.轻量级的框架
+* 2.双向数据绑定
+* 3.指令
+* 4.插件化
+
 ### vuex
 ```
 vue框架中状态管理机。
@@ -119,9 +125,9 @@ vue用来写路由一个插件。router-link、router-view
 使用router对象的params.id {{$route.params | json}}
 
 3.vue-router有哪几种导航钩子？    
-【1】全局导航钩子：router.beforeEach(to,from,next)，前置钩子。
-【2】组件内的钩子；
-【3】配置路由钩子
+【1】全局导航钩子:router.beforeEach(to,from,next)，前置钩子/后置钩子afterEach
+【2】组件内的钩子:beforeRouteEnter/beforeRouteUpdate/beforeRouteLeave
+【3】配置路由钩子:beforeEnter/afterEach
 ```
 
 ------------------------
@@ -143,212 +149,49 @@ vue用来写路由一个插件。router-link、router-view
 1.属性监听：把data上的所有属性进行获取值的监听，值改变时通知所有订阅者进行更新数据。
 2.模板解析：
  2.1解析的过程就是把和属性相关的所有的DOM订阅者收集，以便为属性监听时可以进行订阅者更新。
- 2.2 还有个事，就是所有指令相关的DOM进行事件的绑定；
-```
-
-* 初始化函数
-```
-function myVue(options) {
-  this._init(options);
-};
-myVue.prototype._init = function(options) {
-  this.$options = options;
-  this.$el = document.querySelector(options.el);
-  this.$data = options.data;
-  this.$methods = options.methods;
-
-  // 给每个属性的收集 DOM订阅者。
-  this._binding = {};
-
-  // 设置属性值的监听
-  this._observer(this.$data);
-    
-  // 模板解析：就是绑定属性和订阅者。view与model进行绑定。视图view就是我们的指令，model就是真实的DOM。
-  this._complie(this.$el);
-}
-```
-
-* 设置函数属性监听
-```
-myVue.prototype._observer = function(obj) {
-  var value;
-  for (key in obj) {
-    if (obj.hasOwnProperty(key)) {
-
-
-      this._binding[key] = {
-        _directives: []
-      };
-
-      value = obj[key];
-      if (typeof value === 'object') {
-        this._observer(value);
-      }
-
-      var binding = this._binding[key];
-
-      Object.defineProperty(this.$data, key, {
-        enumerable: true,
-        configurable: true,
-
-        // 值被获取的时候执行这个函数。初始化不执行
-        get: function() {
-          console.log(`获取${value}`);
-          return value;
-        },
-
-        // 值改变的时候才会执行这个函数。初始化不执行
-        // 什么叫值改变：就是你输入，或者点击函数增加都会改变。
-        set: function(newVal) {
-
-          if (value !== newVal) {
-            value = newVal;
-
-            // 值改变的时候，每个和该值有关系的DOM(订阅值)相应属性及时变化。
-            binding._directives.forEach(function(item) {
-                // 更新
-              item.update();
-            })
-          }
-        }
-
-      })
-    }
-  }
-}
-```
-
-* 模板解析
-* 过程1: view和model(包括数据和方法)绑定；
-* 过程2：属性和该属性绑定有关的DOM订阅者进行收集。就是view上的指令，与该指令相关的DOM进行订阅者绑定、收集；
-
-* 订阅者：就是和该属性绑定的DOM
-* 订阅者更新：订阅者就是更新DOM实际要更新的属性。
-```
-myVue.prototype._complie = function(root) {
-  var me = this;
-  var nodes = root.children;
-  // 下面有节点的话 nodes.length 就是节点的个数
-  // 没有就是undefined
-
-  for (var i = 0; i < nodes.length; i++) {
-    var node = nodes[i];
-    if (node.children.length) {
-      this._complie(node);
-    }
-
-    // 【v-click】主要给DOM绑定方法onclick方法，具体就是绑定我们设置好的方法
-    // 他不是数据双向绑定的出入口。不需要收集这个model，只要绑定方法就行。
-    if (node.hasAttribute('v-click')) {
-      node.onclick = (function() {
-        var attrVal = nodes[i].getAttribute('v-click');
-
-        // 方法是我们设置的方法，指定到我们需要指向的对象，就是 me.$data，
-        // 方法内部操作的对象就是 me.$data，
-        // 那么函数改变的时候，就是改变me.$data 下的number属性，这个属性通过上面可以看到被设置监听。监听变化的时候，就进行订阅者的通知。
-
-        return me.$methods[attrVal].bind(me.$data);
-      })();
-    }
-    
-    // 【v-model】绑定input方法，数据双向绑定入口，收集这个model input的watcher
-    if (node.hasAttribute('v-model') && (node.tagName == 'INPUT' || node.tagName == 'TEXTAREA')) {
-      
-      // 初始化的时候，
-      node.addEventListener('input', (function(key) {
-        
-        var attrVal = node.getAttribute('v-model');
-
-        // number 这个属性，收集和相关的 DOM 这个订阅者。
-        me._binding[attrVal]._directives.push(new Watcher(
-          'input',
-          node, // DOM input
-          me,
-          attrVal,// 指令绑定的值 number
-          'value' // 绑定的这个值，要替换 DOM的 value属性
-        ))
-
-        return function() {
-            // 当时就把值改变了。
-          me.$data[attrVal] = nodes[key].value;
-        }
-      })(i));
-
-
-    }
-
-    // 【v-bind】数据双向绑定的出口，收集这个h3的watcher
-    if (node.hasAttribute('v-bind')) {
-      var attrVal = node.getAttribute('v-bind');
-      me._binding[attrVal]._directives.push(new Watcher(
-        'h3',
-        node,
-        me,
-        attrVal,
-        'innerHTML'
-      ))
-    }
-
-    
-    // 【{{}}】数据双向绑定的出口，收集这个h3的watcher
-    var reg = /^\{{2}([a-zA-Z]*)\}{2}$/;
-    if (reg.test(node.innerHTML)) {
-        var attrVal = node.innerHTML.match(reg)[1];
-
-        me._binding[attrVal]._directives.push(new Watcher(
-        'h3',
-        node,
-        me,
-        attrVal,
-        'innerHTML'
-      ));
-    }
-
-  }
-}
-```
-
-* 上面的模板解析就是收集我们的watcher(model、DOM),那么收集到这个DOM，能做什么事情？
-```
-function Watcher(name, el, vm, exp, attr) {
-  this.name = name; 
-  this.el = el; //指令对应的DOM元素
-  this.vm = vm; //指令所属myVue实例
-  this.exp = exp; //指令对应的值，数据中的属性值，本例如"number"
-  this.attr = attr; //绑定的属性值，DOM真实要替换的属性，本例为"innerHTML"
-
-  this.update(); //构造函数内部执行函数，就是收集的时候就执行一次。
-}
-
-Watcher.prototype.update = function() {
-  // DOM的真实被替换的属性 被 替换成data的属性
-  this.el[this.attr] = this.vm.$data[this.exp];
-}
-
-window.onload = function() {
-  var app = new myVue({
-    el: '#app',
-    data: {
-      number: 0
-    },
-    methods: {
-      increment: function() {
-        this.number++;
-      },
-    }
-  });
-}
+ 2.2 所有指令相关的DOM进行我们设置的事件进行绑定；
 ```
 * vue.js 是采用数据劫持结合发布者-订阅者模式的方式，通过Object.defineProperty()来劫持各个属性的setter，getter，在数据变动时发布消息给订阅者，触发相应的监听回调。
 
-----------------
+### 混入mixins:
 
-### VUE特性
-* 1.轻量级的框架
-* 2.双向数据绑定
-* 3.指令
-* 4.插件化
+* 就是把常用的数据和方法混入组件内部。
+* 混入选项为数据data,混入选项为对象时，例如 methods, components 和 directives，将被混合为同一个对象。两个对象键名冲突时，取组件对象的键值对。发生冲突时取组件内的属性
+* 混入钩子函数，混入对象的钩子函数在组件的钩子函数之前调用;
+* 也可以全局注册混入对象。注意使用！ 一旦使用全局混入对象，将会影响到 所有 之后创建的 Vue 实例。使用恰当时，可以为自定义对象注入处理逻辑。
 
+### 指令directive
+
+* 全局指令
+```
+Vue.directive('focus', {
+  // 当被绑定的元素插入到 DOM 中时……
+  inserted: function (el) {
+    // 聚焦元素
+    el.focus()
+  }
+})
+```
+* 局部指令
+```
+directives: {
+  focus: {
+    // 指令的定义
+    inserted: function (el) {
+      el.focus()
+    }
+  }
+}
+```
+
+* 四个钩子函数
+```
+bind：只调用一次，指令第一次绑定到元素时调用。在这里可以进行一次性的初始化设置。
+inserted：被绑定元素插入父节点时调用 (仅保证父节点存在，但不一定已被插入文档中)。
+update：所在组件的 VNode 更新时调用，但是可能发生在其子 VNode 更新之前。指令的值可能发生了改变，也可能没有。但是你可以通过比较更新前后的值来忽略不必要的模板更新
+componentUpdated：指令所在组件的 VNode 及其子 VNode 全部更新后调用。
+unbind：只调用一次，指令与元素解绑时调用。
+```
 
 
 

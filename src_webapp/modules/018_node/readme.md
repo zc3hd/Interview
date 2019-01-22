@@ -19,7 +19,7 @@
 ```
 // 配置前缀
 me.api_pro = '/api/plan';
-me.router.express.Router()路由组件
+me.router.express.Router() 路由组件
 me.router.post('/list.do', function(req, res) {   
 });
 // 生成
@@ -35,17 +35,20 @@ me.app.use(me.api_pro, me.router);
 ```
 res.download() 弹出文件下载
 res.end() 结束response
+
 res.json() 返回json
 res.jsonp() 返回jsonp
+
 res.redirect() 重定向请求
 res.render() 渲染模板
+
 res.send() 返回多种形式数据
 res.sendFile 返回文件
 res.sendStatus() 返回状态
 ```
 
 ##### 1.3 mongoDB && mongoose
-* mongoDB非结构性数据库。mongoose对象化操作数据库
+* mongoDB 非结构性数据库。mongoose对象化操作数据库
 * mongoose：文档模式-->model模型--->实例；model模型方法 和 实例 方法
 ```
 【文档模型】

@@ -31,6 +31,8 @@ window.addEventListener("error",function(e){},true);
 
 ### 跨域的JS如何捕获
 * 跨域的JS可以被捕获到么？错误提示是什么？怎么处理？
+* 但是对于跨域调用的js脚本，onerror事件只会给出很少的报错信息：error: Script error.这个简单的信息很明显不足以看出脚本的具体错误，所以我们可以使用crossorigin属性，使得加载的跨域脚本可以得出跟同域脚本同样的报错信息：
+
 ```
 1.在客户端设置：在script标签上增加crossorigin属性。
 2.在服务端设置：Access-Control-Allow-Origin:*
