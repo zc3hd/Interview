@@ -21,10 +21,69 @@ var o4 = Object.create({ name: "o4" });
 
 ![./img/001.png](./img/001.png)
 
+------------------------
+
+### 查看类型
+
+```
+toString.call(App)  [object Function]
+
+Object instanceof Function  == true
+
+typeof(fn_1)  function
+typeof("")    string
+typeof(0)     number
+typeof([])
+typeof({})
+typeof(new Date())    object
+
+prototype/__proto__
+```
+
 ### instanceof原理
 
 * 就是前面的对象是否继承后面的对象的原型，哪怕是多层。
 * 内部原理就是找对象的__proto__的地址和后面的对象的prototype或__proto__的地址是一样的。
+
+### call实现原理
+
+* 最后效果，就是obj的属性被执行了，obj有新挂了新的FN的内部属性；
+```
+function FN() {
+  this.a =1;
+  console.log(this.b)
+}
+var obj = {b:10};
+
+
+FN.call(obj); //10
+console.log(obj); //{a:1}
+------------------------------------
+【实现过程】
+function _call(fn, obj) {
+  【1】把obj的属性挂载到fn.prototype上面；
+  for(var key in obj){
+    fn.prototype[key] = obj[key];
+  }
+  【2】实例化fn,会把后面的对象属性或方法用来执行
+  var fn_obj = new fn();
+  
+  【3】只是把实例化后的对象的属性,再次挂载到obj上(这个过程这样写不对，因为fn_obj不一定是对象)
+  for(var _key in fn_obj){
+    obj[_key] = fn_obj[_key];
+  }
+}
+
+_call(FN,obj)   //10
+console.log(obj); //{a:1}
+```
+* 总的过程：obj把属性先挂到FN的this上，然后执行FN，最后把FN构造函数的内部的属性挂载到obj上，没有FN的原型对象上的属性，只是FN内的属性。
+
+--------------------------------
+
+### this到底是什么
+
+* 构造函数：是指以后的实例对象，不是构造函数本省；当前执行对象。执行上下文；
 
 ### new实现原理
 
@@ -52,39 +111,5 @@ var new2 = function(Func) {
 }
 ```
 
-### this到底是什么
 
-* 构造函数：是指以后的实例对象，不是构造函数本省；当前执行对象。执行上下文；
-
-### call实现原理
-
-* 最后效果，就是obj的属性被执行了，obj有新挂了新的属性；
-```
-function FN() {
-  this.a =1;
-  console.log(this.b)
-}
-var obj = {b:10};
-------------------------------------
-FN.call(obj); //10
-console.log(obj); //{a:1}
-------------------------------------
-【实现过程】
-function _call(fn, obj) {
-  【1】把obj的属性挂载到fn.prototype上面；
-  for(var key in obj){
-    fn.prototype[key] = obj[key];
-  }
-  【2】实例化fn,会把后面的对象属性或方法用来执行
-  var fn_obj = new fn();
-  
-  【3】只是把实例化后的对象的属性再次挂载到obj上
-  for(var _key in fn_obj){
-    obj[_key] = fn_obj[_key];
-  }
-}
-
-_call(FN,obj)   //10
-console.log(obj); //{a:1}
-```
 

@@ -14,14 +14,15 @@
 <meta name="description" content="文科生，热爱前端与编程。目前大二，这是我的前端博客">
 ```
 
-* viewport(移动端的窗口):视口，用于改变body默认值宽度（980px）,满足屏幕宽度。
+* viewport(移动端的窗口):视口，用于改变body默认值最小宽度（980px）,满足屏幕宽度。
 ```
 <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0">
 ```
 
 * robots(定义搜索引擎爬虫的索引方式):robots用来告诉爬虫哪些页面需要索引，哪些页面不需要索引。content的参数有all,none,index,noindex,follow,nofollow。默认是all。
 ```
-<meta name="robots" content="none">
+<meta name="robots" content="all">
+
 1.none : 搜索引擎将忽略此网页，等价于noindex，nofollow。
 2.noindex : 搜索引擎不索引此网页。
 3.nofollow: 搜索引擎不继续通过此网页的链接索引搜索其它的网页。
