@@ -54,12 +54,12 @@ P.prototype.p_fn = function() {
   console.log("p_fn");
 };
 
-function s_1 () {
+function S () {
 }
-s_1.prototype= new P();
+S.prototype= new P();
 
-var sl_1 = new s_1();
-var sl_2 = new s_1();
+var sl_1 = new S();
+var sl_2 = new S();
 sl_1.arr.push("a");
 console.log(sl_2.arr);  //[1,2,3,"a"]
 --------------------------------------

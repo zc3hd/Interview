@@ -25,8 +25,8 @@ Get:一个给属性提供 getter 的方法(访问对象属性时调用的函数,
 var obj = new Object();
 Object.defineProperty(obj, 'name', {
     configurable: false,
-    writable: true,
     enumerable: true,
+    writable: true,
     value: '张三'
 })
 
@@ -168,7 +168,7 @@ console.log(d)
 //     enumerable: true
 //     value: 'bbb'
 // }
-使用字面量定义的对象,该对象内部的属性的数据描述符属性都为true
+使用字面量定义的对象,该对象内部的属性的数据描述符configurable属性都为true
 ```
 
 ```
