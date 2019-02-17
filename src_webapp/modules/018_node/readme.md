@@ -19,7 +19,7 @@
 ```
 // 配置前缀
 me.api_pro = '/api/plan';
-me.router.express.Router() 路由组件
+me.router = require('express').Router(); 路由组件
 me.router.post('/list.do', function(req, res) {   
 });
 // 生成

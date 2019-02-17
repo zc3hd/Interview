@@ -64,7 +64,7 @@ arr.forEach(function(ele, index) {
 });
 ```
 
-### fn内置参数caller, callee和arguments分别是什么?
+### fn内置参数fn.caller, arguments.callee和arguments分别是什么?
 
 ```
 function parent(param1, param2, param3) {
