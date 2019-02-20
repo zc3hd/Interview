@@ -139,7 +139,6 @@ myVue.prototype._complie = function(root) {
     if (reg.test(node.innerHTML)) {
     	// statement
     	var attrVal = node.innerHTML.match(reg)[1];
-    	// console.log()
     	me._binding[attrVal]._directives.push(new Watcher(
         'h3',
         node,

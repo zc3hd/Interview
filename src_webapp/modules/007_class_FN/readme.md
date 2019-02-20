@@ -63,7 +63,7 @@ var sl_2 = new S();
 sl_1.arr.push("a");
 console.log(sl_2.arr);  //[1,2,3,"a"]
 --------------------------------------
-【4.call+prototype】解决上面问题1+2
+【3.call+prototype】解决上面问题1+2
 function P(argument) {
   this.name = "p";
 }
@@ -99,8 +99,3 @@ class Worker extends Person {
 }
 ```
 
-### apply, call和bind有什么区别?
-
-* 都是把前面的函数内对象属性复制到后面的对象上。
-* apply,call是直接执行函数调用，apply和call的区别是apply接受数组作为参数，而call是接受逗号分隔的无限多个参数列表；
-* bind是绑定，执行需要再次调用
