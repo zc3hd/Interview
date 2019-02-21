@@ -23,6 +23,8 @@ gulp-babel：语法转换
 
 * 【loader】用于加载某些资源文件。因为webpack本身只能打包common.js规范的js文件，对于其他资源如css，img等，是没有办法加载的，这时就需要对应的loader将资源转化，从而进行加载。
 * 【plugin】用于扩展webpack的功能。不同于loader，plugin的功能更加丰富，比如压缩打包，优化，不只局限于资源的加载。
+* css-loader: 加载.css文件
+* style-loader:使用`<style>`将css-loader内部样式注入到我们的HTML页面
 
 # 区别
 

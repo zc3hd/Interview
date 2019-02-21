@@ -50,6 +50,7 @@ computed:{
 }
 me.$store.commit('user_suc', { _id: data._id });
 ```
+* 它集中于MVC模式中的Model层，规定所有的数据操作必须通过 action – mutation – statechange 的流程来进行，再结合Vue的数据视图双向绑定特性来实现页面的展示更新;
 
 ### vue生命周期
 
@@ -66,28 +67,6 @@ me.$store.commit('user_suc', { _id: data._id });
 
 【销毁前/后】1.在执行destroy方法后，对data的改变不会再触发周期函数，说明此时vue实例已经解除了事件监听以及和dom的绑定，但是dom结构依然存在
 ```
-
-### vue.cli自定义的组件
-```
-1.在components目录新建你的组件文件
-（smithButton.vue），export default {}
-
-2.在需要用的页面（组件）中导入：
-import smithButton from ‘../components/smithButton.vue’
-
-3.注入到vue的子组件的components属性上面,
-components:{smithButton}
-
-4.在template视图view中使用，驼峰命名，使用为-
-<smith-button>  </smith-button> 
-```
-
-### 混入mixins
-
-* 就是把常用的数据和方法提前为公共，混入组件内部进行使用；我自己感觉，其实直接写个全局对象就行了。
-* 混入选项为数据data,混入选项为对象时，例如 methods, components 和 directives，将被混合为同一个对象。两个对象键名冲突时，取组件对象的键值对。发生冲突时取组件内的属性
-* 混入钩子函数，混入对象的钩子函数在组件的钩子函数之前调用;
-* 也可以全局注册混入对象。注意使用！ 一旦使用全局混入对象，将会影响到 所有 之后创建的 Vue 实例。使用恰当时，可以为自定义对象注入处理逻辑。
 
 ### 指令directive
 
@@ -123,10 +102,27 @@ unbind：只调用一次，指令与元素解绑时调用。
 ```
 
 
-### Vue的template编译
+### vue.cli自定义的组件
+```
+1.在components目录新建你的组件文件
+（smithButton.vue），export default {}
 
-* 首先，通过compile编译器把template编译成AST语法树
-* AST会经过generate（将AST语法树转化成render funtion字符串的过程）得到render函数，render的返回值是VNode，VNode是Vue的虚拟DOM节点，里面有（标签名、子节点、文本等等）;这里的Vnode其实就是我们订阅者；（和绑定属性相关的DOM节点）
+2.在需要用的页面（组件）中导入：
+import smithButton from ‘../components/smithButton.vue’
+
+3.注入到vue的子组件的components属性上面,
+components:{smithButton}
+
+4.在template视图view中使用，驼峰命名，使用为-
+<smith-button>  </smith-button> 
+```
+
+### 混入mixins
+
+* 就是把常用的数据和方法提前为公共，混入组件内部进行使用；我自己感觉，其实直接写个全局对象就行了。
+* 混入选项为数据data,混入选项为对象时，例如 methods, components 和 directives，将被混合为同一个对象。两个对象键名冲突时，取组件对象的键值对。发生冲突时取组件内的属性
+* 混入钩子函数，混入对象的钩子函数在组件的钩子函数之前调用;
+* 也可以全局注册混入对象。注意使用！ 一旦使用全局混入对象，将会影响到 所有 之后创建的 Vue 实例。使用恰当时，可以为自定义对象注入处理逻辑。
 
 ### vue spa的实现原理
 
@@ -172,6 +168,16 @@ router对象的params.id {{$route.params | json}}
 【2】组件内的钩子:beforeRouteEnter/beforeRouteUpdate/beforeRouteLeave
 【3】配置路由钩子:beforeEnter/afterEach
 ```
+
+
+
+
+
+
+### Vue的template编译
+
+* 首先，通过compile编译器把template编译成AST语法树
+* AST会经过generate（将AST语法树转化成render funtion字符串的过程）得到render函数，render的返回值是VNode，VNode是Vue的虚拟DOM节点，里面有（标签名、子节点、文本等等）;这里的Vnode其实就是我们订阅者；（和绑定属性相关的DOM节点）
 
 ### VUE数据双向绑定原理
 * 就是做了三件事：
