@@ -1,23 +1,19 @@
 # 业务分析 技术栈准备
-* 就是找他们网站看他们的技术栈。
 
 ### 京东金融
 
 * 导航的组件。怎么写？
-* 布局
+* 布局：响应式
 * 动画效果
 * meta标签：http-equiv='x-ua-compatible' content="ie=edge,chrome=1"
 * meta标签：name=render content=webkit(双核浏览器优先用webkit渲染)
 * link:rel=dns-prefetch  DNS预解析？提供页面性能？
 * local storage
 * 字体：怎么引。
-
 * JQ：事件委托，选择器
 * VUE
 * es6语法
 * webpack
-
-----
 
 ### elong
 
@@ -35,4 +31,4 @@
 * less语法，怎么用
 * gulp工作原理和webpack的区别
 * npm常见的命令和scripts怎么用
-* browserify如何用
+* browserify 如何使用

@@ -101,7 +101,6 @@ componentUpdated：指令所在组件的 VNode 及其子 VNode 全部更新后�
 unbind：只调用一次，指令与元素解绑时调用。
 ```
 
-
 ### vue.cli自定义的组件
 ```
 1.在components目录新建你的组件文件
@@ -123,6 +122,29 @@ components:{smithButton}
 * 混入选项为数据data,混入选项为对象时，例如 methods, components 和 directives，将被混合为同一个对象。两个对象键名冲突时，取组件对象的键值对。发生冲突时取组件内的属性
 * 混入钩子函数，混入对象的钩子函数在组件的钩子函数之前调用;
 * 也可以全局注册混入对象。注意使用！ 一旦使用全局混入对象，将会影响到 所有 之后创建的 Vue 实例。使用恰当时，可以为自定义对象注入处理逻辑。
+
+### $nextTick
+
+* 用法：在下次 DOM 更新循环结束之后执行延迟回调。在修改数据之后立即使用这个方法，获取更新后的 DOM。
+* 异步说明：Vue 实现响应式并不是数据发生变化之后 DOM 立即变化，而是按一定的策略进行 DOM 的更新。
+* 异步执行的运行机制：
+```
+（1）所有同步任务都在主线程上执行，形成一个执行栈（execution context stack）。
+（2）主线程之外，还存在一个"任务队列"（task queue）。只要异步任务有了运行结果，就在"任务队列"之中放置一个事件。
+（3）一旦"执行栈"中的所有同步任务执行完毕，系统就会读取"任务队列"，看看里面有哪些事件。那些对应的异步任务，于是结束等待状态，进入执行栈，开始执行。
+（4）主线程不断重复上面的第三步。
+```
+* 事件循环：简单来说，Vue 在修改数据后，视图不会立刻更新，而是等同一事件循环中的所有数据变化完成之后，再统一进行视图更新。
+* created、mounted：需要注意的是，在 created 和 mounted 阶段，如果需要操作渲染后的试图，也要使用 nextTick 方法。注意 mounted 不会承诺所有的子组件也都一起被挂载。如果你希望等到整个视图都渲染完毕，可以用 vm.$nextTick 替换掉 mounted
+```
+showsou(){
+  this.showit = true
+  this.$nextTick(function () {
+    // DOM 更新了
+    document.getElementById("keywords").focus()
+  })
+}
+```
 
 ### vue spa的实现原理
 
@@ -168,11 +190,6 @@ router对象的params.id {{$route.params | json}}
 【2】组件内的钩子:beforeRouteEnter/beforeRouteUpdate/beforeRouteLeave
 【3】配置路由钩子:beforeEnter/afterEach
 ```
-
-
-
-
-
 
 ### Vue的template编译
 
