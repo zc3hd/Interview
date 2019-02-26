@@ -155,7 +155,7 @@ var sum = function( a, b) {
     return a +b;
 }
 -------------------------------------------------
-多行代码，需要用{}抱起来
+多行代码，需要用{}包起来
 var sum = (a, b) => { 
     console.log(a,b);
     return a+b;
