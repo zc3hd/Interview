@@ -82,7 +82,8 @@ console.log(total); // 1130
 
 filter()实例：筛选排除掉所有的小值​
 function isBigEnough(element) {
-    return element >= 10;【这里只要一个ture|false】
+   【这里只要一个ture|false】
+    return element >= 10;
 }
 var filtered = [12, 5, 8, 130, 44].filter(isBigEnough);
 console.log(filtered);//[ 12, 130, 44 ]

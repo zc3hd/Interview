@@ -1,5 +1,5 @@
 'use strict';
-var one = './src_webapp/modules/007_class_FN_1Object/';
+var one = './src_webapp/modules/006_create_obj_string/';
 
 
 
