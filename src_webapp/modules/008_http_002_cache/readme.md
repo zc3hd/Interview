@@ -133,3 +133,9 @@ max-stale指示客户机可以接收超出超时期间的响应消息。如果�
 * 在Firefox下并没有from memory cache以及from disk cache的状态展现，
 * 相同的资源在chrome下是from disk/memory cache，但是Firefox统统是304状态码。
 * 即Firefox下会缓存资源，但是每次都会请求服务器对比当前缓存是否更改，chrome不请求服务器，直接拿过来用。这也是为啥chrome比较快的原因之一吧
+
+----------------------------
+
+### 最后：
+
+![](./img/3.jpg)

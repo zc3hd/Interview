@@ -26,4 +26,92 @@ for (var i = 0; i < 4; i++) {
 * DOM的事件：浏览器有单独模块去接受这个函数，GUI监听用户点击某个按钮触发函数的时候，这个模块就会把这个函数推到【异步队列】中，【事件循环】会监测、拿走、执行这个函数。
 * ES6中的promise。
 
+----------------------
+
+# 宏任务、微任务
+
+* 先看代码
+```
+console.log('script start');
+
+setTimeout(function() {
+  console.log('setTimeout');
+}, 0);
+
+Promise.resolve().then(function() {
+  console.log('promise1');
+}).then(function() {
+  console.log('promise2');
+});
+
+console.log('script end');
+```
+
+* 正确答案是：script start, script end, promise1, promise2, setTimeout
+* 每个线程都会有它自己的event loop(事件循环)，所以都能独立运行。然而所有同源窗口会共享一个event loop以同步通信。event loop会一直运行，来执行进入队列的宏任务。一个event loop有多种的宏任务源（译者注：event等等），这些宏任务源保证了在本任务源内的顺序。但是浏览器每次都会选择一个源中的一个宏任务去执行。这保证了浏览器给与一些宏任务（如用户输入）以更高的优先级。
+
+### 宏任务（task）
+
+* 浏览器为了能够使得JS内部task与DOM任务能够有序的执行，会在一个task执行结束后，在下一个 task 执行开始前，对页面进行重新渲染 
+* task->渲染->task->...
+* 鼠标点击会触发一个事件回调，需要执行一个宏任务，然后解析HTMl。
+* setTimeout的作用是等待给定的时间后为它的回调产生一个新的宏任务。这就是为什么打印‘setTimeout’在‘script end’之后。
+* 因为打印script end是第一个宏任务里面的事情，而‘setTimeout’是另一个独立的任务里面打印的。
+
+### 微任务（Microtasks ）
+
+* 微任务通常来说就是需要在当前 task 执行结束后立即执行的任务，比如对一系列动作做出反馈，或者是需要异步的执行任务而又不需要分配一个新的 task，这样便可以减小一点性能的开销。
+* 只要执行栈中没有其他的js代码正在执行且每个宏任务执行完，微任务队列会立即执行。
+* 如果在微任务执行期间微任务队列加入了新的微任务，会将新的微任务加入队列尾部，之后也会被执行。
+* 微任务包括了mutation observe的回调还有接下来的例子promise的回调。
+* 一旦一个pormise有了结果，或者早已有了结果（有了结果是指这个promise到了fulfilled或rejected状态），他就会为它的回调产生一个微任务，这就保证了回调异步的执行即使这个promise早已有了结果。
+* 所以对一个已经有了结果的promise调用.then(yey, nay)会立即产生一个微任务。这就是为什么‘promise1’,'promise2'会打印在‘script end’之后，
+* 因为所有微任务执行的时候，当前执行栈的代码必须已经执行完毕。‘promise1’,'promise2'会打印在‘setTimeout’之前是因为所有微任务总会在下一个宏任务之前全部执行完毕。
+
+
+```
+// Let's get hold of those elements
+var outer = document.querySelector('.outer');
+var inner = document.querySelector('.inner');
+
+// Let's listen for attribute changes on the
+// outer element
+//监听element属性变化
+new MutationObserver(function() {
+  console.log('mutate');
+}).observe(outer, {
+  attributes: true
+});
+
+// Here's a click listener…
+function onClick() {
+  console.log('click');
+
+  setTimeout(function() {
+    console.log('timeout');
+  }, 0);
+
+  Promise.resolve().then(function() {
+    console.log('promise');
+  });
+
+  outer.setAttribute('data-random', Math.random());
+}
+
+// …which we'll attach to both elements
+inner.addEventListener('click', onClick);
+outer.addEventListener('click', onClick);
+```
+
+* 谷歌
+```
+click
+promise
+mutate
+click
+promise
+mutate
+timeout
+timeout
+```
 

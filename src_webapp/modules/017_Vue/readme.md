@@ -146,6 +146,55 @@ showsou(){
 }
 ```
 
+* Vnode:https://segmentfault.com/a/1190000013314893
+* 可能你还没有注意到，Vue异步执行DOM更新。只要观察到数据变化，Vue将开启一个队列，并缓冲在同一事件循环中发生的所有数据改变。如果同一个watcher被多次触发，只会被推入到队列中一次。这种在缓冲时去除重复数据对于避免不必要的计算和DOM操作上非常重要。然后，在下一个的事件循环“tick”中，Vue刷新队列并执行实际 (已去重的) 工作。
+* 简而言之，就是在一个事件循环中发生的所有数据改变都会在下一个事件循环的Tick中来触发视图更新，这也是一个“批处理”的过程。（注意下一个事件循环的Tick有可能是在当前的Tick微任务执行阶段执行，也可能是在下一个Tick执行，主要取决于nextTick函数到底是使用Promise/MutationObserver还是setTimeout）
+* nextTick函数其实做了两件事情，一是生成一个timerFunc，把回调作为microTask或macroTask参与到事件循环中来。二是把回调函数放入一个callbacks队列，等待适当的时机执行。（这个时机和timerFunc不同的实现有关）
+```
+if (typeof Promise !== 'undefined' && isNative(Promise)) {
+    /*使用Promise*/
+    var p = Promise.resolve()
+    var logError = err => { console.error(err) }
+    timerFunc = () => {
+        p.then(nextTickHandler).catch(logError)
+        // in problematic UIWebViews, Promise.then doesn't completely break, but
+        // it can get stuck in a weird state where callbacks are pushed into the
+        // microTask queue but the queue isn't being flushed, until the browser
+        // needs to do some other work, e.g. handle a timer. Therefore we can
+        // "force" the microTask queue to be flushed by adding an empty timer.
+        if (isIOS) setTimeout(noop)
+    }
+} else if (typeof MutationObserver !== 'undefined' && (
+    isNative(MutationObserver) ||
+    // PhantomJS and iOS 7.x
+    MutationObserver.toString() === '[object MutationObserverConstructor]'
+    )) {
+    // use MutationObserver where native Promise is not available,
+    // e.g. PhantomJS IE11, iOS7, Android 4.4
+    /*新建一个textNode的DOM对象，用MutationObserver绑定该DOM并指定回调函数，在DOM变化的时候则会触发回调,该回调会进入主线程（比任务队列优先执行），即textNode.data = String(counter)时便会触发回调*/
+    var counter = 1
+    var observer = new MutationObserver(nextTickHandler)
+    var textNode = document.createTextNode(String(counter))
+    observer.observe(textNode, {
+        characterData: true
+    })
+    timerFunc = () => {
+        counter = (counter + 1) % 2
+        textNode.data = String(counter)
+    }
+} else {
+    // fallback to setTimeout
+    /* istanbul ignore next */
+    /*使用setTimeout将回调推入任务队列尾部*/
+    timerFunc = () => {
+        setTimeout(nextTickHandler, 0)
+    }
+}
+```
+* 值得注意的是，它会按照Promise、MutationObserver、setTimeout优先级去调用传入的回调函数。前两者会生成一个microTask任务，而后者会生成一个macroTask。（微任务和宏任务）
+* 之所以会设置这样的优先级，主要是考虑到浏览器之间的兼容性（IE没有内置Promise）。另外，设置Promise最优先是因为Promise.resolve().then回调函数属于一个微任务，浏览器在一个Tick中执行完macroTask后会清空当前Tick所有的microTask再进行UI渲染，把DOM更新的操作放在Tick执行microTask的阶段来完成，相比使用setTimeout生成的一个macroTask会少一次UI的渲染。
+
+
 ### vue spa的实现原理
 
 * 随着 ajax 的流行，异步数据请求交互运行在不刷新浏览器的情况下进行。而异步交互体验的更高级版本就是 SPA —— 单页应用。
