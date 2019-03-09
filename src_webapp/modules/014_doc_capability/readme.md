@@ -96,6 +96,9 @@ HTTP 1.1 304 Not Midified
 
 * 7.精简混淆JavaScript，精简CSS
 
+* 8.动画要使用CSS3的translate，不会引起浏览器的重绘和重排，这就相当nice了。这点就很牛逼了。页面不会Repaint（没有重新计算render tree）
+
+
 ### 页面渲染优化
 
 ```
