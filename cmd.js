@@ -70,10 +70,9 @@ else if (process.env.NODE_ENV == 'git') {
   // 要提交的源的名字
   var origin = (os.hostname() == "LAPTOP-UJ33NHEM" ? "name" : "origin");
 
-
   tool
   // 导出数据库
-    // ._cmd(`mongodump -h 127.0.0.1:27017 -d ${conf.db} -o ${_path}`)
+  // ._cmd(`mongodump -h 127.0.0.1:27017 -d ${conf.db} -o ${_path}`)
     ._cmd(`git add ${_url}`)
     // 
     // .then(function() {
@@ -83,7 +82,10 @@ else if (process.env.NODE_ENV == 'git') {
       return tool._cmd(`git commit -m "date:${tool._date(timestamp)}"`);
     })
     .then(function() {
-      return tool._cmd(`git push -u ${origin} master`)
+      return tool._cmd(`git push -u name master`)
+    })
+    .then(function() {
+      return tool._cmd(`git push -u origin master`)
     })
     .then(function() {
       console.log('上传git完成');
