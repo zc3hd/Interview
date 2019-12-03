@@ -127,3 +127,84 @@ HTTP 1.1 304 Not Midified
   }
 ```
 
+* 原公司代码实时数据代码优化：以前在公司这样写代码：
+
+  - 调用`this.add();`：内部会产生闭包；
+
+  ![1574503459685](C:/Users/lenovo/Desktop/imgs/1574503459685.png)
+
+  - 调用`this.render()`：内部会产生闭包；最恶心的是递归执行一次就会产生一次闭包；执行多次后页面就卡顿！！
+
+  ![1574503845456](imgs/1574503845456.png)
+
+```
+function FN(id) {
+    this.box = document.querySelector(id);
+    this.data = ["测试数据"];
+    this.add();
+    this.render();
+  }
+  FN.prototype = {
+    add: function() {
+      var me = this;
+      me.box.onclick = function() {
+        console.log(me.data);
+      };
+    },
+    render: function() {
+      var me = this;
+      // 获取数据：
+      var arr = [1, 2, 3];
+      arr.forEach(function(item, index, arr) {
+        console.log(item);
+      });
+
+      setTimeout(function() {
+        me.render();
+      }, 1000);
+    },
+  };
+
+  new FN();
+```
+
+- 修改this,避免闭包；
+
+```js
+  function FN(id) {
+    this.box = document.querySelector(id);
+    this.data = ["测试数据"];
+    this.render();
+    this.add();
+  }
+  FN.prototype = {
+    add: function() {
+      // var me = this;
+      this.box.onclick = function() {
+        console.log(this.data);
+      }.bind(this);
+    },
+    render: function() {
+      // var me = this;
+      // 获取数据：
+      var arr = [1, 2, 3];
+      arr.forEach(function(item, index, arr) {
+        console.log(item);
+      });
+
+      setTimeout(function() {
+        this.render();
+      }.bind(this), 1000);
+    },
+  };
+
+
+  new FN();
+```
+
+- 改变this指向，不会产生闭包:
+
+![1574504038912](imgs/1574504038912.png)
+
+![1574504064357](imgs/1574504064357.png)
+
