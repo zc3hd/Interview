@@ -4,9 +4,10 @@
   "description": "gulp",
   "main": "index.js",
   "scripts": {
-    "dev": "set NODE_ENV=dev&&gulp",
-    "api": "set NODE_ENV=api&&node ./api_server/app_auto.js",
-    "git": "set NODE_ENV=git&&node ./cmd.js"
+    "web_proxy": "set NODE_ENV=web_proxy&&gulp",
+    "web_only": "set NODE_ENV=web_only&& gulp",
+    "api_proxy": "node ./api_server/app_auto.js",
+    "api_only": "node ./api_server/app.js"
   },
   "author": "cc",
   "license": "ISC",
@@ -14,6 +15,10 @@
     "babel-core": "^6.26.2",
     "babel-preset-env": "^1.6.1",
     "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "babel-preset-stage-1": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "babel-preset-stage-3": "^6.24.1",
     "browser-sync": "^2.17.5",
     "cross-env": "^3.0.0",
     "express": "^4.16.4",
@@ -27,9 +32,11 @@
     "gulp-less": "^3.3.0",
     "gulp-nodemon": "^2.4.1",
     "gulp-plumber": "^1.2.0",
+    "gulp-remove-use-strict": "0.0.2",
     "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^2.6.4",
     "gulp-uglify": "^2.1.2",
+    "gulp-uglifyes": "^0.2.1",
     "imagemin-pngquant": "^5.1.0"
   },
   "dependencies": {
